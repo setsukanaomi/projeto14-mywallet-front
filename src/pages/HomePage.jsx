@@ -79,9 +79,9 @@ export default function HomePage() {
         {!loading && (
           <article>
             <strong>Saldo</strong>
-            <Value data-test="total-amount" color={calculateBalance() >= 0 ? "positivo" : "negativo"}>
+            <Balance data-test="total-amount" color={calculateBalance() >= 0 ? "positivo" : "negativo"}>
               {formatBalance(calculateBalance())}
-            </Value>
+            </Balance>
           </article>
         )}
       </TransactionsContainer>
@@ -168,10 +168,14 @@ const ButtonsContainer = styled.section`
 const Value = styled.div`
   font-size: 16px;
   text-align: right;
-  color: ${(props) => (props.color === "positivo" ? "green" : "red")};
   color: ${(props) => (props.type === "entrada" ? "green" : "red")};
 `;
 
+const Balance = styled.div`
+  font-size: 16px;
+  text-align: right;
+  color: ${(props) => (props.color === "positivo" ? "green" : "red")};
+`;
 const ListItemContainer = styled.li`
   display: flex;
   justify-content: space-between;
