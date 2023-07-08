@@ -1,32 +1,52 @@
 import styled from "styled-components";
 import { BiExit } from "react-icons/bi";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
+import { useContext, useEffect, useState } from "react";
+import { Context } from "../contexts/Context";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 export default function HomePage() {
+  const { name, token, setTransactions, transactions } = useContext(Context);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const authentication = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/home`, authentication)
+      .then((answer) => {
+        setTransactions(answer.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        alert(error.message);
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <HomeContainer>
       <Header>
-        <h1>Olá, Naomi</h1>
+        <h1>Olá, {name}</h1>
         <BiExit />
       </Header>
 
       <TransactionsContainer>
         <ul>
-          <ListItemContainer>
-            <div>
-              <span>30/11</span>
-              <strong>Almoço mãe</strong>
-            </div>
-            <Value color={"negativo"}>120,00</Value>
-          </ListItemContainer>
-
-          <ListItemContainer>
-            <div>
-              <span>15/11</span>
-              <strong>Salário</strong>
-            </div>
-            <Value color={"positivo"}>3000,00</Value>
-          </ListItemContainer>
+          {!loading &&
+            transactions.map((transaction, id) => (
+              <ListItemContainer key={id}>
+                <div>
+                  <span>{transaction.date}</span>
+                  <strong>{transaction.description}</strong>
+                </div>
+                <Value type={transaction.type}>{transaction.value}</Value>
+              </ListItemContainer>
+            ))}
         </ul>
 
         <article>
@@ -37,17 +57,20 @@ export default function HomePage() {
 
       <ButtonsContainer>
         <button>
-          <AiOutlinePlusCircle />
-          <p>
-            Nova <br /> entrada
-          </p>
+          <Link to="/nova-transacao/entrada">
+            <AiOutlinePlusCircle />
+            <p>
+              Nova <br /> entrada
+            </p>
+          </Link>
         </button>
         <button>
-          <AiOutlineMinusCircle />
-          <p>
-            Nova <br />
-            saída
-          </p>
+          <Link to="/nova-transacao/saida">
+            <AiOutlineMinusCircle />
+            <p>
+              Nova <br /> saída
+            </p>
+          </Link>
         </button>
       </ButtonsContainer>
     </HomeContainer>
@@ -109,7 +132,9 @@ const Value = styled.div`
   font-size: 16px;
   text-align: right;
   color: ${(props) => (props.color === "positivo" ? "green" : "red")};
+  color: ${(props) => (props.type === "entrada" ? "green" : "red")};
 `;
+
 const ListItemContainer = styled.li`
   display: flex;
   justify-content: space-between;
