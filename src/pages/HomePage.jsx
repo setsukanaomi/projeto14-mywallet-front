@@ -5,7 +5,6 @@ import { useContext, useEffect, useState } from "react";
 import { Context } from "../contexts/Context";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { calculateBalance, formatBalance } from "../components/CalculateBalance";
 
 export default function HomePage() {
   const { name, token, setTransactions, transactions } = useContext(Context);
@@ -28,6 +27,32 @@ export default function HomePage() {
         setLoading(false);
       });
   }, []);
+
+  const calculateBalance = () => {
+    let balance = 0;
+
+    transactions.forEach((transaction) => {
+      if (transaction.type === "entrada") {
+        balance += transaction.value;
+      } else if (transaction.type === "saida") {
+        balance -= transaction.value;
+      }
+    });
+    return balance;
+  };
+
+  const formatBalance = (balance) => {
+    const formattedBalance = balance.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
+    if (balance < 0) {
+      return formattedBalance.substring(1);
+    }
+
+    return formattedBalance;
+  };
 
   return (
     <HomeContainer>
