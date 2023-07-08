@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { Context } from "../contexts/Context";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { calculateBalance, formatBalance } from "../components/CalculateBalance";
 
 export default function HomePage() {
   const { name, token, setTransactions, transactions } = useContext(Context);
@@ -27,32 +28,6 @@ export default function HomePage() {
         setLoading(false);
       });
   }, []);
-
-  const calculateBalance = () => {
-    let balance = 0;
-
-    transactions.forEach((transaction) => {
-      if (transaction.type === "entrada") {
-        balance += transaction.value;
-      } else if (transaction.type === "saida") {
-        balance -= transaction.value;
-      }
-    });
-    return balance;
-  };
-
-  const formatBalance = (balance) => {
-    const formattedBalance = balance.toLocaleString("pt-BR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-
-    if (balance < 0) {
-      return formattedBalance.substring(1);
-    }
-
-    return formattedBalance;
-  };
 
   return (
     <HomeContainer>
@@ -88,25 +63,31 @@ export default function HomePage() {
 
       <ButtonsContainer>
         <button data-test="new-income">
-          <Link to="/nova-transacao/entrada">
+          <StyledLink to="/nova-transacao/entrada">
             <AiOutlinePlusCircle />
             <p>
               Nova <br /> entrada
             </p>
-          </Link>
+          </StyledLink>
         </button>
         <button data-test="new-expense">
-          <Link to="/nova-transacao/saida">
+          <StyledLink to="/nova-transacao/saida">
             <AiOutlineMinusCircle />
             <p>
               Nova <br /> saída
             </p>
-          </Link>
+          </StyledLink>
         </button>
       </ButtonsContainer>
     </HomeContainer>
   );
 }
+
+const StyledLink = styled(Link)`
+  display: block;
+  width: 100%;
+  height: 100%;
+`;
 
 const HomeContainer = styled.div`
   display: flex;

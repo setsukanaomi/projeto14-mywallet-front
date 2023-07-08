@@ -7,7 +7,7 @@ import axios from "axios";
 
 export default function SignInPage() {
   const navigate = useNavigate();
-  const { setToken } = useContext(Context);
+  const { setToken, setName } = useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -22,7 +22,8 @@ export default function SignInPage() {
     axios
       .post(`${import.meta.env.VITE_API_URL}/`, data)
       .then((response) => {
-        setToken(response.data);
+        setToken(response.data.token);
+        setName(response.data.name);
         navigate("/home");
       })
       .catch((error) => {
