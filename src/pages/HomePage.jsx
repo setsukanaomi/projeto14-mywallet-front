@@ -28,10 +28,36 @@ export default function HomePage() {
       });
   }, []);
 
+  const calculateBalance = () => {
+    let balance = 0;
+
+    transactions.forEach((transaction) => {
+      if (transaction.type === "entrada") {
+        balance += transaction.value;
+      } else if (transaction.type === "saida") {
+        balance -= transaction.value;
+      }
+    });
+    return balance;
+  };
+
+  const formatBalance = (balance) => {
+    const formattedBalance = balance.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
+    if (balance < 0) {
+      return formattedBalance.substring(1);
+    }
+
+    return formattedBalance;
+  };
+
   return (
     <HomeContainer>
       <Header>
-        <h1>Olá, {name}</h1>
+        <h1 data-test="user-name">Olá, {name}</h1>
         <BiExit />
       </Header>
 
@@ -42,21 +68,26 @@ export default function HomePage() {
               <ListItemContainer key={id}>
                 <div>
                   <span>{transaction.date}</span>
-                  <strong>{transaction.description}</strong>
+                  <strong data-test="registry-name">{transaction.description}</strong>
                 </div>
-                <Value type={transaction.type}>{transaction.value}</Value>
+                <Value data-test="registry-amount" type={transaction.type}>
+                  {transaction.value.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </Value>
               </ListItemContainer>
             ))}
         </ul>
-
-        <article>
-          <strong>Saldo</strong>
-          <Value color={"positivo"}>2880,00</Value>
-        </article>
+        {!loading && (
+          <article>
+            <strong>Saldo</strong>
+            <Value data-test="total-amount" color={calculateBalance() >= 0 ? "positivo" : "negativo"}>
+              {formatBalance(calculateBalance())}
+            </Value>
+          </article>
+        )}
       </TransactionsContainer>
 
       <ButtonsContainer>
-        <button>
+        <button data-test="new-income">
           <Link to="/nova-transacao/entrada">
             <AiOutlinePlusCircle />
             <p>
@@ -64,7 +95,7 @@ export default function HomePage() {
             </p>
           </Link>
         </button>
-        <button>
+        <button data-test="new-expense">
           <Link to="/nova-transacao/saida">
             <AiOutlineMinusCircle />
             <p>
