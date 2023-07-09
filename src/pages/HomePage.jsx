@@ -28,29 +28,6 @@ export default function HomePage() {
       });
   }, []);
 
-  const calculateBalance = () => {
-    let balance = 0;
-
-    transactions.forEach((transaction) => {
-      if (transaction.type === "entrada") {
-        balance += transaction.value;
-      } else if (transaction.type === "saida") {
-        balance -= transaction.value;
-      }
-    });
-    return balance;
-  };
-
-  const formatBalance = (balance) => {
-    const formattedBalance = balance.toFixed(2).replace(".", ",");
-
-    if (balance < 0) {
-      return formattedBalance.substring(1);
-    }
-
-    return formattedBalance;
-  };
-
   return (
     <HomeContainer>
       <Header>
