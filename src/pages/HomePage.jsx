@@ -41,10 +41,7 @@ export default function HomePage() {
   };
 
   const formatBalance = (balance) => {
-    const formattedBalance = balance.toLocaleString("pt-BR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
+    const formattedBalance = balance.toFixed(2).replace(".", ",");
 
     if (balance < 0) {
       return formattedBalance.substring(1);
@@ -70,7 +67,7 @@ export default function HomePage() {
                   <strong data-test="registry-name">{transaction.description}</strong>
                 </div>
                 <Value data-test="registry-amount" type={transaction.type}>
-                  {transaction.value.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  {transaction.value.toFixed(2).replace(".", ",")}
                 </Value>
               </ListItemContainer>
             ))}
