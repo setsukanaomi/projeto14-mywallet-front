@@ -1,14 +1,14 @@
 import styled from "styled-components";
-import Logout from "../components/Logout";
-import Balance from "../components/Balance";
+import { BiExit } from "react-icons/bi";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Context } from "../contexts/Context";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function HomePage() {
   const { name, token, setTransactions, transactions, loading, setLoading } = useContext(Context);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const authentication = {
@@ -28,11 +28,40 @@ export default function HomePage() {
       });
   }, []);
 
+  const calculateBalance = () => {
+    let balance = 0;
+
+    transactions.forEach((transaction) => {
+      if (transaction.type === "entrada") {
+        balance += transaction.value;
+      } else if (transaction.type === "saida") {
+        balance -= transaction.value;
+      }
+    });
+    return balance;
+  };
+
+  const formatBalance = (balance) => {
+    const formattedBalance = balance.toFixed(2).replace(".", ",");
+
+    if (balance < 0) {
+      return formattedBalance.substring(1);
+    }
+
+    return formattedBalance;
+  };
+
+  function Logout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("name");
+    navigate("/");
+  }
+
   return (
     <HomeContainer>
       <Header>
         <h1 data-test="user-name">Olá, {name}</h1>
-        <Logout data-test="logout" />
+        <BiExit data-test="logout" onClick={Logout} />
       </Header>
 
       <TransactionsContainer>
@@ -53,7 +82,9 @@ export default function HomePage() {
         {!loading && (
           <article>
             <strong>Saldo</strong>
-            <Balance data-test="total-amount" />
+            <Balance data-test="total-amount" color={calculateBalance() >= 0 ? "positivo" : "negativo"}>
+              {formatBalance(calculateBalance())}
+            </Balance>
           </article>
         )}
       </TransactionsContainer>
@@ -138,6 +169,12 @@ const ButtonsContainer = styled.section`
   }
 `;
 const Value = styled.div`
+  font-size: 16px;
+  text-align: right;
+  color: ${(props) => (props.type === "entrada" ? "green" : "red")};
+`;
+
+const Balance = styled.div`
   font-size: 16px;
   text-align: right;
   color: ${(props) => (props.type === "entrada" ? "green" : "red")};
