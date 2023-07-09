@@ -182,7 +182,7 @@ const Value = styled.div`
 const Balance = styled.div`
   font-size: 16px;
   text-align: right;
-  color: ${(props) => (props.type === "entrada" ? "green" : "red")};
+  color: ${(props) => (props.color === "positivo" ? "green" : "red")};
 `;
 
 const ListItemContainer = styled.li`
