@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import MyWalletLogo from "../components/MyWalletLogo";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Context } from "../contexts/Context";
 import axios from "axios";
 
@@ -10,6 +10,16 @@ export default function SignInPage() {
   const { setToken, setName } = useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    const storedName = localStorage.getItem("name");
+    if (storedToken) {
+      setToken(storedToken);
+      setName(storedName);
+      navigate("/home");
+    }
+  }, []);
 
   function Login(event) {
     event.preventDefault();
@@ -24,6 +34,8 @@ export default function SignInPage() {
       .then((response) => {
         setToken(response.data.token);
         setName(response.data.name);
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("name", response.data.name);
         navigate("/home");
       })
       .catch((error) => {

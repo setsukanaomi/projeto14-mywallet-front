@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { BiExit } from "react-icons/bi";
+import Logout from "../components/Logout";
+import Balance from "../components/Balance";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import { useContext, useEffect, useState } from "react";
 import { Context } from "../contexts/Context";
@@ -54,7 +55,7 @@ export default function HomePage() {
     <HomeContainer>
       <Header>
         <h1 data-test="user-name">Olá, {name}</h1>
-        <BiExit />
+        <Logout data-test="logout" />
       </Header>
 
       <TransactionsContainer>
@@ -75,9 +76,7 @@ export default function HomePage() {
         {!loading && (
           <article>
             <strong>Saldo</strong>
-            <Balance data-test="total-amount" color={calculateBalance() >= 0 ? "positivo" : "negativo"}>
-              {formatBalance(calculateBalance())}
-            </Balance>
+            <Balance data-test="total-amount" />
           </article>
         )}
       </TransactionsContainer>
@@ -167,11 +166,6 @@ const Value = styled.div`
   color: ${(props) => (props.type === "entrada" ? "green" : "red")};
 `;
 
-const Balance = styled.div`
-  font-size: 16px;
-  text-align: right;
-  color: ${(props) => (props.color === "positivo" ? "green" : "red")};
-`;
 const ListItemContainer = styled.li`
   display: flex;
   justify-content: space-between;
