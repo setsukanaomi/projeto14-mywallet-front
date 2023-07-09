@@ -11,6 +11,11 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!token) {
+      navigate("/");
+      return;
+    }
+
     const authentication = {
       headers: {
         Authorization: `Bearer ${token}`,
