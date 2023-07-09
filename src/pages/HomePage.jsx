@@ -7,8 +7,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 export default function HomePage() {
-  const { name, token, setTransactions, transactions } = useContext(Context);
-  const [loading, setLoading] = useState(true);
+  const { name, token, setTransactions, transactions, loading, setLoading } = useContext(Context);
 
   useEffect(() => {
     const authentication = {

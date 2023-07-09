@@ -21,10 +21,10 @@ export default function SignUpPage() {
     }
 
     const data = {
-      name: name,
-      email: email,
-      password: password,
-      confirmPassword: confirmPassword,
+      name,
+      email,
+      password,
+      confirmPassword,
     };
 
     axios

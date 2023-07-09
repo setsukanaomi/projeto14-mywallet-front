@@ -15,8 +15,8 @@ export default function SignInPage() {
     event.preventDefault();
 
     const data = {
-      email: email,
-      password: password,
+      email,
+      password,
     };
 
     axios

@@ -6,6 +6,7 @@ export const ContextProvider = ({ children }) => {
   const [token, setToken] = useState("");
   const [name, setName] = useState("");
   const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   return (
     <Context.Provider
@@ -16,6 +17,8 @@ export const ContextProvider = ({ children }) => {
         setName,
         transactions,
         setTransactions,
+        loading,
+        setLoading,
       }}
     >
       {children}
